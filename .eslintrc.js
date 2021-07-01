@@ -33,7 +33,25 @@ module.exports = {
         js: 'never',
       },
     ],
+    'react/jsx-filename-extension': [2, { extensions: ['.ts', '.tsx'] }],
+    '@typescript-eslint/explicit-module-boundary-types': false,
   },
+  overrides: [
+    {
+      files: ['*.js', '*.ts'],
+      rules: {
+        '@typescript-eslint/explicit-module-boundary-types': 'warn',
+      },
+    },
+    {
+      files: ['**/*.ts', '**/*.tsx'],
+      plugins: ['@typescript-eslint'],
+      rules: {
+        'no-use-before-define': 'off',
+        '@typescript-eslint/no-use-before-define': ['error'],
+      },
+    },
+  ],
   settings: {
     'import/resolver': {
       node: {
