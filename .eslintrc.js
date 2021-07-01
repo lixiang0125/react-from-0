@@ -34,7 +34,7 @@ module.exports = {
       },
     ],
     'react/jsx-filename-extension': [2, { extensions: ['.ts', '.tsx'] }],
-    '@typescript-eslint/explicit-module-boundary-types': false,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
   },
   overrides: [
     {
