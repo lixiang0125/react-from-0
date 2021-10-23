@@ -1,7 +1,7 @@
 # react-from-0
-### 安装npm和node
-### 创建package
-#### 方法1：
+## 安装npm和node
+## 创建package
+### 方法1：
 在文件夹内创建一个package.json文件。文件内输入,然后保存
 ```
 {
@@ -16,13 +16,13 @@
   "license": "ISC",
 }
 ```
-#### 方法2：
+### 方法2：
 输入
 ```
 npm init
 ```
 后按提示进行
-### 安装webpack
+## 安装webpack
 ```
 npm install --save-dev webpack
 # 或指定版本
@@ -43,16 +43,23 @@ npm install --save-dev webpack-cli
 ```js
 resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-  },
+  }
 ```
-### 安装babel
+### source map配置
+可以在webpack中配置devtool或SourceMapDevToolPlugin属性来配置source map。
+> 你可以直接使用 SourceMapDevToolPlugin / EvalSourceMapDevToolPlugin 来替代使用 devtool 选项，因为它有更多的选项。切勿同时使用 devtool 选项 SourceMapDevToolPlugin / EvalSourceMapDevToolPlugin 插件。
+
+使用 devtool 名称时，不要混淆 devtool 字符串的顺序， 模式是： [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map
+
+
+## 安装babel
 > babel@7+改动很大。babel-XX都改为了@babel/XXX
 > 需要babel-loader@8+才依赖@babel/core,低版本依赖的是babel-core
 > .babelrc中不再需要指定多个语言，只需要
 ```
 presets:["@babel/preset-env"]
 ```
-### 安装react
+## 安装react
 >npm install react
 >npm install react-dom
 >两个都要装，不然在打包时会报错
@@ -62,7 +69,7 @@ presets:["@babel/preset-env"]
 >npm i --save-dev @types/react-dom
 
 否则会报错
-### eslint
+## eslint
 >npm install eslint -D后，eslint会被添加到devDependencies中。
 >npx eslint --init可在项目中添加.eslintrc.js文件。
 
@@ -84,7 +91,7 @@ rules: {
 >一些插件：
 >eslint-plugin-promise ：让你把 Promise 语法写成最佳实践。
 >eslint-plugin-unicorn ：提供了更多有用的配置项，比如我会用来规范关于文件命名的方式。
-### React-dev-server
+## React-dev-server
 > 新版指令不再使用react-dev-server,改为使用react dev
 安装后需要在webpack中配置
 ```JavaScript
@@ -102,7 +109,7 @@ devServer: {
     host: '0.0.0.0'
 }
 ```
-### CSSLoader和postCss
+## CSSLoader和postCss
 需要安装 style-loader 和 css-loader 来加载css文件
 - style-loader 用于将 CSS 插入到 DOM 中，通过使用多个 <style></style> 自动把 styles 插入到 DOM 中.
 - css-loader 对 @import 和 url() 进行处理，就像 js 解析 import/require() 一样，让 CSS 也能模块化开发。 
@@ -147,45 +154,63 @@ npm install --save-dev postcss-loader postcss postcss-preset-env
 在webpack中配置
 ```coffeescript
 module.exports = {
-    module: {
-        rules: [
-          {
-            test: /\.module\.(scss|sass)$/,
-            include: paths.appSrc,
-            use: [
-              // 将 JS 字符串生成为 style 节点
-              'style-loader',
-              // 将 CSS 转化成 CommonJS 模块
-              {
-                loader: 'css-loader',
-                options: {
-                  // Enable CSS Modules features
-                  modules: true,
-                  importLoaders: 2,
-                  // 0 => no loaders (default);
-                  // 1 => postcss-loader;
-                  // 2 => postcss-loader, sass-loader
-                },
-              },
-              // 将 PostCSS 编译成 CSS
-              {
-                loader: 'postcss-loader',
-                options: {
-                  postcssOptions: {
-                    plugins: [
-                      [
-                        // postcss-preset-env 包含 autoprefixer
-                        'postcss-preset-env',
-                      ],
-                    ],
-                  },
-                },
-              },
-              // 将 Sass 编译成 CSS
-              'sass-loader',
-            ],
-          },
-        ],
-      },
+  module: {
+    rules: [{
+      test: /\.module\.(scss|sass)$/,
+      include: paths.appSrc,
+      use: [
+        'style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            sourceMap: true,
+          },
+        },
+        {
+          loader: 'postcss-loader',
+          options: {
+            postcssOptions: {
+              plugins: [
+                ['postcss-preset-env'],
+              ],
+            },
+          },
+        },
+        'sass-loader',
+      ],
+    },
+  ],
+  },
 }
+```
+## 配置tailwind
+详见 https://www.tailwindcss.cn/docs/installation#post-css-tailwind-css
+```coffeescript
+npm install tailwindcss@latest postcss@latest autoprefixer@latest
+```
+安装 tailwind 以及 postcss、autoprefixer
+在主目录下添加 postcss.config.js 文件
+```coffeescript
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+```
+再创建一个 tailwind.config.js 文件
+```coffeescript
+module.exports = {
+  purge: [],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    extend: {},
+  },
+  variants: {},
+  plugins: [],
+};
+```
+随后在最外层的app.tsx中引入tailwind
+```coffeescript
+import 'tailwindcss/tailwind.css';
 ```
