@@ -21,15 +21,14 @@ module.exports = {
         'css-loader',
       ],
     }, {
-      test: /.(scss|sass)$/,
+      test: /\.s[ac]ss$/i,
       include: path.src,
       use: [
         'style-loader',
         {
           loader: 'css-loader',
           options: {
-            modules: true,
-            importLoader: 2,
+            sourceMap: true,
           },
         },
         {
