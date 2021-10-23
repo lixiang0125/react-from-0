@@ -36,7 +36,7 @@ module.exports = {
           options: {
             postcssOptions: {
               plugins: [
-                ['postcss-preset-env'],
+                ['postcss-preset-env', 'tailwindcss'],
               ],
             },
           },
