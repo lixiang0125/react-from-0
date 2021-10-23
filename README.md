@@ -102,3 +102,90 @@ devServer: {
     host: '0.0.0.0'
 }
 ```
+### CSSLoader和postCss
+需要安装 style-loader 和 css-loader 来加载css文件
+- style-loader 用于将 CSS 插入到 DOM 中，通过使用多个 <style></style> 自动把 styles 插入到 DOM 中.
+- css-loader 对 @import 和 url() 进行处理，就像 js 解析 import/require() 一样，让 CSS 也能模块化开发。 
+```coffeescript
+npm install --save-dev style-loader css-loader
+```
+随后在module中配置
+```coffeescript
+module: {
+  rules: [{
+    test: /\.css$/,
+    include: path.src,
+    use: [
+      'style-loader',
+      'css-loader',
+    ],
+  }],
+}
+```
+安装 sass-loader, 支持 sass/scss 文件
+```coffeescript
+npm install --save-dev sass-loader sass
+```
+随后在webpack中进行配置
+```coffeescript
+module: {
+  rules: [{
+    test: /.(scss|sass)$/,
+    include: path.src,
+    use: [
+      'style-loader',
+      'css-loader',
+      'sass-loader',
+    ],
+  }],
+}
+```
+再安装 postcss-loader 来解决 css 全局命名冲突的问题
+```coffeescript
+npm install --save-dev postcss-loader postcss postcss-preset-env
+```
+在webpack中配置
+```coffeescript
+module.exports = {
+    module: {
+        rules: [
+          {
+            test: /\.module\.(scss|sass)$/,
+            include: paths.appSrc,
+            use: [
+              // 将 JS 字符串生成为 style 节点
+              'style-loader',
+              // 将 CSS 转化成 CommonJS 模块
+              {
+                loader: 'css-loader',
+                options: {
+                  // Enable CSS Modules features
+                  modules: true,
+                  importLoaders: 2,
+                  // 0 => no loaders (default);
+                  // 1 => postcss-loader;
+                  // 2 => postcss-loader, sass-loader
+                },
+              },
+              // 将 PostCSS 编译成 CSS
+              {
+                loader: 'postcss-loader',
+                options: {
+                  postcssOptions: {
+                    plugins: [
+                      [
+                        // postcss-preset-env 包含 autoprefixer
+                        'postcss-preset-env',
+                      ],
+                    ],
+                  },
+                },
+              },
+              // 将 Sass 编译成 CSS
+              'sass-loader',
+            ],
+          },
+        ],
+      },
+}
+```
