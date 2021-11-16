@@ -19,6 +19,16 @@ module.exports = {
       use: [
         'style-loader',
         'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            postcssOptions: {
+              plugins: [
+                ['postcss-preset-env', 'tailwindcss'],
+              ],
+            },
+          },
+        },
       ],
     }, {
       test: /\.s[ac]ss$/i,

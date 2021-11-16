@@ -8,7 +8,7 @@ const Homepage = () => {
   };
 
   return (
-    <div>
+    <div className="text-4xl">
       this is homepage
       <button type="button" onClick={handleClick}>ABC</button>
     </div>
