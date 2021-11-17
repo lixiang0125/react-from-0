@@ -156,16 +156,11 @@ npm install --save-dev postcss-loader postcss postcss-preset-env
 module.exports = {
   module: {
     rules: [{
-      test: /\.module\.(scss|sass)$/,
-      include: paths.appSrc,
+      test: /\.css$/,
+      include: path.src,
       use: [
         'style-loader',
-        {
-          loader: 'css-loader',
-          options: {
-            sourceMap: true,
-          },
-        },
+        'css-loader',
         {
           loader: 'postcss-loader',
           options: {
@@ -176,7 +171,6 @@ module.exports = {
             },
           },
         },
-        'sass-loader',
       ],
     },
   ],
@@ -213,4 +207,25 @@ module.exports = {
 随后在最外层的app.tsx中引入tailwind
 ```coffeescript
 import 'tailwindcss/tailwind.css';
+```
+> tailwind的CSS文件也需要postcss编译，因此需要在webpack的css配置中加入tailwind。
+```coffeescript
+{
+      test: /\.css$/,
+      include: path.src,
+      use: [
+        'style-loader',
+        'css-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            postcssOptions: {
+              plugins: [
+                ['postcss-preset-env', 'tailwindcss'],
+              ],
+            },
+          },
+        },
+      ],
+    }
 ```
